@@ -70,8 +70,8 @@ public class Cofactor {
    * Removes the row and column at the given index from the given matrix. Assumes valid
    * implementation of the matrix
    * 
-   * @param coordinates   the coordinate array of the coordinate 
-   * @param matrix       the matrix ot be reduced
+   * @param coordinates the coordinate array of the coordinate
+   * @param matrix      the matrix ot be reduced
    * @throws IllegalArgumentException if the coordinate array does not contain 2 values
    * @return
    */
@@ -124,11 +124,9 @@ public class Cofactor {
   }
 
   /**
-   * To String method. prints out an array that visually looks as follows
-   * [a11, a12, ... a1n]
-   * [a21, a22, ... a2n]
-   * [ :             : ]
-   * [am1, am2, ... amn]
+   * To String method. prints out an array that visually looks as follows [a11, a12, ... a1n] [a21,
+   * a22, ... a2n] [ : : ] [am1, am2, ... amn]
+   * 
    * @return the string representation of this object
    */
   @Override

@@ -49,8 +49,9 @@ public class Summation {
 
   /**
    * Returns the permutation at the given index
-   * @param index  the index of the permutation you want returned
-   * @return       the int array of the permutation at the index
+   * 
+   * @param index the index of the permutation you want returned
+   * @return the int array of the permutation at the index
    */
   public int[] getPermutation(int index) {
     if (index < 0 || index >= permutations.size())
@@ -60,8 +61,9 @@ public class Summation {
 
   /**
    * Returns the permutation sign at the given index
-   * @param index  the index of the permutation sign you want returned
-   * @return       the int array of the permutation sign at the index
+   * 
+   * @param index the index of the permutation sign you want returned
+   * @return the int array of the permutation sign at the index
    */
   public int getPermutationSign(int index) {
     if (index < 0 || index >= permutationSigns.size())
@@ -102,10 +104,11 @@ public class Summation {
       }
     }
   }
+
   /**
    * iterates through all permutations in the permutation arrayList, and iterates through each
-   * individual value, and checks how many following values are greater than it; this is the definition
-   * of the sign of a permutation.
+   * individual value, and checks how many following values are greater than it; this is the
+   * definition of the sign of a permutation.
    */
   private void permutationSignsFinder() {
     // iterates through all permutations
