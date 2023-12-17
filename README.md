@@ -5,9 +5,9 @@ Working on using row reduction to use
 
 ## Determinant Summation
 ### Runtime Complexity: O(n!)
-This is a bit slower than the cofactor expansion, likely by my own doing, as it needs to calculate all permutations, which
-takes O(n!) n being the length of the matrix, then solve the signs for the permutations, which is O(n!), n being the length of a matrix 
-again, and then sums the matrix up from there
+The algorithm I used can likely be implemented a little bit better. Fundamentally the runtime complexity is O(n!), but my implementation
+takes O(n!) to calculate the permutations, O(n!) to calculate the signs of each permutation, then O(n!) again to calculate the sums.
+This can be made better by finding the sign during the permutation generator
 
 ## Cofactor Expansion
 ### Runtime Complexity: O(n!)
@@ -16,6 +16,7 @@ determininant of the resulting minor. It does this for every value.
 
 ## Row Reduction
 ### Runtime Complexity: O(n^3)
+This runtime is much better than its predecessors for larger matricies. 
 
 | N | O(n!)  | O(n^3) |
 | --| -------| ------ |
@@ -26,5 +27,14 @@ determininant of the resulting minor. It does this for every value.
 | 5 | 120    | 125    |
 | 6 | 720    | 216    |
 | 7 | 5040   | 343    |
+| 8 | 40320  | 512    |
 
-O(n^3) is much quicker with a matrix with greater than 6 rows and columns
+![O(n!)](https://github.com/markstanl/DeterminantCalculator/assets/146277800/cf2d904b-c21d-41be-83b6-8f148f4b1943)
+
+O(n^3) obviously grows much slower for larger matricies
+
+##Other Classes
+I also implemented a fraction class which is used in the row reduction. This was to make everything look a little nicer
+This method performs division, and though it would work with doubles, It may end with some weird number, so I used 
+fractions
+I plan to implement a runtime tester method to visually see the different runtimes
