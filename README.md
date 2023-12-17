@@ -34,6 +34,8 @@ This runtime is much better than its predecessors for larger matricies.
 O(n^3) obviously grows much slower for larger matricies
 
 ##Other Classes
+I implemented a utility class with various helpful methods, so I don't need to create the same method in 
+every class
 I also implemented a fraction class which is used in the row reduction. This was to make everything look a little nicer
 This method performs division, and though it would work with doubles, It may end with some weird number, so I used 
 fractions
