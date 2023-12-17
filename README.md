@@ -1,7 +1,7 @@
 # Determinant Calculator
-Java project to solve the determinant of a matrix using multiple different methods
-Currently uses the definition of a determinant summation, and cofactor expansion to find the determinant of a matrix
-Working on using row reduction to use 
+Java project to solve the determinant of a matrix using multiple different methods  
+Three class to solve determinants, by the summation definition, cofactor expansion, and row reduction  
+@TODO I will implement a driver, and some runtime tests  
 
 ## Determinant Summation
 ### Runtime Complexity: O(n!)
@@ -35,8 +35,8 @@ O(n^3) obviously grows much slower for larger matricies
 
 ## Other Classes
 I implemented a utility class with various helpful methods, so I don't need to create the same method in 
-every class
-I also implemented a fraction class which is used in the row reduction. This was to make everything look a little nicer
+every class  
+I also implemented a fraction class which is used in the row reduction. This was to make everything look a little nicer  
 This method performs division, and though it would work with doubles, It may end with some weird number, so I used 
-fractions
+fractions  
 I plan to implement a runtime tester method to visually see the different runtimes
