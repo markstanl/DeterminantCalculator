@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * Determinant tester class, tests the functionality of all different determinant testers
@@ -40,7 +41,7 @@ public class DeterminantTester {
     double[][] testMatrix = new double[][] {{1, 2}, {3, 2}};
     Cofactor test = new Cofactor(testMatrix);
     double expectedDet = -4;
-    double det = test.solver();
+    double det = test.getDet();
     if (det != expectedDet) {
       System.out.println("solverTestSizeTwo test 1 fail");
       System.out.println("   expected det: -4  actual det: " + det);
@@ -60,7 +61,7 @@ public class DeterminantTester {
     double[][] testMatrix = new double[][] {{1, 2, 3}, {3, 2, 1}, {2, 1, 3}};
     Cofactor test = new Cofactor(testMatrix);
     double expectedDet = -12;
-    double det = test.solver();
+    double det = test.getDet();
 
     if (det != expectedDet) {
       System.out.println("  cofactorSolverTestSizeThree returns ");
@@ -152,7 +153,7 @@ public class DeterminantTester {
     double[][] testMatrix1 = new double[][] {{1, 2}, {3, 2}};
     Summation test1 = new Summation(testMatrix1);
     double expectedDet1 = -4;
-    double det1 = test1.solver();
+    double det1 = test1.getDet();
 
     if (det1 != expectedDet1) {
       System.out.println("sumDeterminantSolver test 1 fail");
@@ -163,7 +164,7 @@ public class DeterminantTester {
     double[][] testMatrix2 = new double[][] {{1, 2, 3}, {3, 2, 1}, {2, 1, 3}};
     Cofactor test2 = new Cofactor(testMatrix2);
     double expectedDet2 = -12;
-    double det2 = test2.solver();
+    double det2 = test2.getDet();
 
     if (det2 != expectedDet2) {
       System.out.println("  sumDeterminantSolver test 2 fail ");
@@ -276,7 +277,7 @@ public class DeterminantTester {
    */
   public static boolean rowReductionTest() {
     int[][] tesMatrix1 = new int[][] {{1, 2}, {3, 2}};
-    Fraction[][] testMatrix1 = Utility.toFraction(tesMatrix1);
+    Fraction[][] testMatrix1 = Utility.toFractionMatrix(tesMatrix1);
 
     RowReduction test1 = new RowReduction(testMatrix1);
     Fraction expectedDet = new Fraction(-4);
@@ -288,7 +289,7 @@ public class DeterminantTester {
     }
 
     int[][] tetMatrix2 = new int[][] {{1, 2, 3}, {3, 2, 1}, {2, 1, 3}};
-    Fraction[][] testMatrix2 = Utility.toFraction(tetMatrix2);
+    Fraction[][] testMatrix2 = Utility.toFractionMatrix(tetMatrix2);
 
     RowReduction test2 = new RowReduction(testMatrix2);
     int expectedDet2 = -12;
@@ -301,6 +302,42 @@ public class DeterminantTester {
     }
 
 
+    return true;
+  }
+
+  /**
+   * Fuzz tester for the determinants. Tests many different cases of matricies against other valid
+   * implementations
+   * 
+   * @return false if all determinant methods don't return the same value, true if they do
+   */
+  public static boolean allDeterminantFuzzTester() {
+    ArrayList<int[][]> matricies = Utility.generateMatricies(2000, 73, 5, 5);// # of matricies,
+                                                                             // random seed, max num
+                                                                             // in matrix, max size
+
+    for (int i = 0; i < matricies.size(); i++) {
+      int[][] compareMatrix = matricies.get(i);
+      Summation summation = new Summation(compareMatrix);
+      Cofactor cofactor = new Cofactor(compareMatrix);
+      RowReduction rowReduction = new RowReduction(compareMatrix);
+      // if the determinants aren't close enough (within an error range explainable by weird double
+      // java things) error found
+      if (!Utility.closeEnough(summation.getDet(), cofactor.getDet())
+          || !Utility.closeEnough(summation.getDet(), rowReduction.getDet().doubleVal())) {
+        System.out.println(" allDeterminantFuzzTester test " + (i + 1) + " fail");
+        System.out.println("Matrix: ");
+        Utility.printMatrix(compareMatrix);
+        System.out.println(" summation determinant: " + summation.getDet());
+        System.out.println(" cofactor determinant: " + cofactor.getDet());
+        System.out.println(" rowReduction determinant: " + rowReduction.getDet());
+        System.out
+            .println(" first bool: " + Utility.closeEnough(summation.getDet(), cofactor.getDet()));
+        System.out.println(" second bool: "
+            + Utility.closeEnough(summation.getDet(), rowReduction.getDet().doubleVal()));
+        return false;
+      }
+    }
     return true;
   }
 
@@ -319,6 +356,7 @@ public class DeterminantTester {
     boolean sumDeterminantSolver = sumDeterminantSolver();
     boolean fractionMethods = fractionMethods();
     boolean rowReductionTest = rowReductionTest();
+    boolean allDeterminantFuzzTester = allDeterminantFuzzTester();
 
 
     String resultMatrixCompressor = matrixCompressor ? "pass" : "fail";
@@ -345,9 +383,12 @@ public class DeterminantTester {
     String resultrowReductionTest = rowReductionTest ? "pass" : "fail";
     System.out.println("rowReductionTest: " + resultrowReductionTest);
 
+    String resultallDeterminantFuzzTester = allDeterminantFuzzTester ? "pass" : "fail";
+    System.out.println("allDeterminantFuzzTester: " + resultallDeterminantFuzzTester);
+
     return matrixCompressor && cofactorSolverTestSizeTwo && cofactorSolverTestSizeThree
         && sumSignTester && sumConstructor && sumDeterminantSolver && fractionMethods
-        && rowReductionTest;
+        && rowReductionTest && allDeterminantFuzzTester;
 
   }
 

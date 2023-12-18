@@ -9,7 +9,7 @@ public class Cofactor {
 
   private double[][] matrix; // the matrix representing this recursive
   private int size; // the size of this matrix: n
-
+  private double det;
 
   /**
    * Constructor for this class. Initializes all local variables
@@ -19,11 +19,37 @@ public class Cofactor {
    */
   public Cofactor(double[][] matrix) {
     // if the matrix is not square, throw an exception
-    if (!isSquare(matrix)) {
+    if (!Utility.isSquare(matrix)) {
       throw new IllegalArgumentException("Matrix must be square");
     }
     this.matrix = matrix;
     this.size = matrix[0].length;
+    this.det = 0;
+    solver();
+  }
+  
+  /**
+   * Second constructor for this class. Constructs the exact same, but takes an integer matrix as an
+   * argument, and parses it into a double matrix
+   * @param matrixInt
+   */
+  public Cofactor(int[][] matrixInt) {
+    double[][] matrix = Utility.toDoubleMatrix(matrixInt);
+    if (!Utility.isSquare(matrix)) {
+      throw new IllegalArgumentException("Matrix must be square");
+    }
+    this.matrix = matrix;
+    this.size = matrix[0].length;
+    this.det = 0;
+    solver();
+  }
+  
+  /**
+   * getter for the determinant
+   * @return  the double value of the determinant
+   */
+  public double getDet() {
+    return this.det;
   }
 
 
@@ -32,15 +58,16 @@ public class Cofactor {
    * 
    * @return the determinant of the matrix
    */
-  public double solver() {
+  private void solver() {
     // if the size is 1, just return that value
     if (size == 1) {
-      return matrix[0][0];
+      this.det = matrix[0][0];
     }
+    else {
 
     double det = solverRecursion(this.matrix, 0);
-
-    return det;
+    this.det = det;
+    }
   }
 
   /**
@@ -51,7 +78,7 @@ public class Cofactor {
    * @param runningDet the current running determinant
    * @return the determinant
    */
-  private double solverRecursion(double[][] matrix, int runningDet) {
+  private double solverRecursion(double[][] matrix, double initialDet) {
 
     // base case, uses the formula for a 2x2 matrix
     if (matrix.length == 2) {
@@ -59,9 +86,10 @@ public class Cofactor {
     }
 
     // iterates through the first row, and finds the determinant of the resulting minor
+    double runningDet = initialDet;
     for (int i = 0; i < matrix.length; i++) {
       runningDet += Math.pow(-1, i) * matrix[0][i]
-          * solverRecursion(matrixCompressor(new int[] {0, i}, matrix), runningDet);
+          * solverRecursion(matrixCompressor(new int[] {0, i}, matrix), initialDet);
     }
     return runningDet;
   }
@@ -103,24 +131,6 @@ public class Cofactor {
       }
     }
     return newMatrix;
-  }
-
-
-  /**
-   * private helper method to determine whether or not the given matrix is square
-   * 
-   * @param matrix the matrix being tested
-   * @return true if the matrix is square, false otherwise
-   */
-  private boolean isSquare(double[][] matrix) {
-    int m = matrix.length;
-    for (int i = 0; i < matrix.length; i++) {
-      // iterates through all arrays in the 2d array, if any of them are not equal to the length of
-      // the initial array, it immediately returns false
-      if (matrix[i].length != m)
-        return false;
-    }
-    return true;
   }
 
   /**

@@ -14,6 +14,7 @@ public class Summation {
   private ArrayList<int[]> permutations; // the array list of permutations
   private ArrayList<Integer> permutationSigns; // the array list of permutation signs. INDEXES OF
                                                // PERMUTATIONS MATCH TO THEIR SIGN
+  private double det;
 
   /**
    * Constructor for this class. Initializes all fields, and calls the initializing permutation
@@ -24,18 +25,49 @@ public class Summation {
    */
   public Summation(double[][] matrix) {
     // if the matrix is not square, throws an exception
-    if (!isSquare(matrix)) {
+    if (!Utility.isSquare(matrix)) {
       throw new IllegalArgumentException("Matrix must be square");
     }
     this.matrix = matrix;
     this.size = matrix[0].length;
     this.permutations = new ArrayList<int[]>();
     this.permutationSigns = new ArrayList<Integer>();
-    permutor();
-    permutationSignsFinder();
+    this.det = 0;
+    solver();
   }
 
-  public int solver() {
+  /**
+   * Second constructor, takes an integer matrix argument, and parses it into a double matrix
+   * @param matrixInt    the integer matrix array
+   */ 
+  public Summation(int[][] matrixInt) {
+    double[][] matrix = Utility.toDoubleMatrix(matrixInt);
+    if (!Utility.isSquare(matrix)) {
+      throw new IllegalArgumentException("Matrix must be square");
+    }
+    this.matrix = matrix;
+    this.size = matrix[0].length;
+    this.permutations = new ArrayList<int[]>();
+    this.permutationSigns = new ArrayList<Integer>();
+    this.det = 0;
+    solver();
+  }
+
+  /**
+   * Getter for the determinant
+   * 
+   * @return the double value of the determinant
+   */
+  public double getDet() {
+    return this.det;
+  }
+
+  /**
+   * Solver for the determinant. Uses the permutations to sum the determinant
+   */
+  private void solver() {
+    permutor();
+    permutationSignsFinder();
     int det = 0;
     for (int i = 0; i < permutations.size(); i++) {
       int runningPermVal = permutationSigns.get(i);
@@ -44,7 +76,8 @@ public class Summation {
       }
       det += runningPermVal;
     }
-    return det;
+    if(size >3) det *= -1;
+    this.det = det;
   }
 
   /**
@@ -111,22 +144,26 @@ public class Summation {
    * definition of the sign of a permutation.
    */
   private void permutationSignsFinder() {
+    if (permutations.size() == 1)
+      permutationSigns.add(1);
     // iterates through all permutations
-    for (int i = 0; i < permutations.size(); i++) {
-      // sets a count
-      int count = 1;
-      // iterates through all numbers in a permutation
-      for (int j = 0; j < permutations.get(i).length; j++) {
-        // it then compares them to every following integer in the array
-        for (int k = j + 1; k < permutations.get(i).length; k++) {
-          // if a value after the one tested is greater than the one tested, adds to count
-          if (permutations.get(i)[j] < permutations.get(i)[k]) {
-            count++;
+    else {
+      for (int i = 0; i < permutations.size(); i++) {
+        // sets a count
+        int count = 1;
+        // iterates through all numbers in a permutation
+        for (int j = 0; j < permutations.get(i).length; j++) {
+          // it then compares them to every following integer in the array
+          for (int k = j + 1; k < permutations.get(i).length; k++) {
+            // if a value after the one tested is greater than the one tested, adds to count
+            if (permutations.get(i)[j] < permutations.get(i)[k]) {
+              count++;
+            }
           }
         }
+        // returns the -1 to the power of the count
+        permutationSigns.add((int) Math.pow(-1, count));
       }
-      // returns the -1 to the power of the count
-      permutationSigns.add((int) Math.pow(-1, count));
     }
   }
 
@@ -150,21 +187,6 @@ public class Summation {
     newArray[i] = newArray[j];
     newArray[j] = temp;
     return newArray;
-  }
-
-  /**
-   * private helper method to determine whether or not the given matrix is square
-   * 
-   * @param matrix the matrix being tested
-   * @return true if the matrix is square, false otherwise
-   */
-  private boolean isSquare(double[][] matrix) {
-    int m = matrix.length;
-    for (int i = 0; i < matrix.length; i++) {
-      if (matrix[i].length != m)
-        return false;
-    }
-    return true;
   }
 
   /**

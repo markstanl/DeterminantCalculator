@@ -31,7 +31,7 @@ public class RowReduction {
    * @throws IllegalArgumentException if he matrix is not square
    */
   public RowReduction(int[][] matrixInt) {
-    Fraction[][] matrix = Utility.toFraction(matrixInt);
+    Fraction[][] matrix = Utility.toFractionMatrix(matrixInt);
     this.matrix = matrix;
     this.size = matrix.length;
     this.det = null;
@@ -54,6 +54,7 @@ public class RowReduction {
    * Row reduction method. Reduces the row to find the determinant by calling a helper method
    */
   private void rowReduce() {
+    boolean done = false;
     // iterate through every column in the matrix
     Fraction runningDet = new Fraction(1);
     // Iterates through every row in the matrix
@@ -62,14 +63,22 @@ public class RowReduction {
       Fraction returned = rowReduceAt(i);
       // if the row reduction results in a 0, that row is empty and therefore the det is 0
       if (returned.equals(new Fraction(0))) {
-        this.det = new Fraction(0);
+        done = true;
         break;
       }
       // else keep the continuous running count
       runningDet.multiply(returned);
+      
+      //if(this.size == 5) System.out.println(this);
+      //System.out.println(this);
     }
+    
     // return the determinant
-    this.det = runningDet;
+    if(done)this.det = new Fraction(0);
+    else {
+      
+      this.det = runningDet;
+    }
   }
 
   /**
@@ -101,28 +110,28 @@ public class RowReduction {
     for (int i = columnIndex; i < this.size; i++) {
       matrix[columnIndex][i].multiply(multiplier);
     }
+    
+    //IN THIS POSITION. The target row is now all reduced such that the first row is a pivot
 
-    // iterates through every row after the column index
-    for (int i = columnIndex + 1; i < this.size; i++) {
-      // initialize the value that we will multiply by to get the next value
-      if (matrix[i][columnIndex].equals(new Fraction(0)))
-        break; // skip the row if already 0
-
-      Fraction mult = matrix[i][columnIndex].copy(); // this factor will multiply by the current
-                                                     // index and then subtract down
-      // iterates through every value in the row array
-      for (int j = columnIndex; j < this.size; j++) {
-        Fraction toMult = matrix[columnIndex][j].copy();
-        toMult.multiply(mult);
-        matrix[i][j].subtract(toMult);
-      }
-
+    //starts at the row after the index row
+    for(int i = columnIndex+1 ; i < this.size ; i++) {
+      Fraction multi = new Fraction(1);
+      multi.multiply(matrix[i][columnIndex]);
+      subtractRow(i, columnIndex, multi);
     }
+    
     multiplier.invert(); // inverts the multipler then returns it
     if (nonzeroRow != columnIndex)
-      multiplier.multiply(new Fraction(-1)); // if we did a swap our matrix
-    // is mulplied by -1
+      multiplier.multiply(new Fraction(-1)); // if we did a swap our matrix is mulplied by -1
     return multiplier;
+  }
+  
+  private void subtractRow(int a, int b, Fraction multiplier) {
+    for(int i = 0 ; i < this.size ; i++) {
+      Fraction toSubtract = matrix[b][i].copy();
+      toSubtract.multiply(multiplier);
+      matrix[a][i].subtract(toSubtract);
+    }
   }
 
   /**
