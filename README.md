@@ -41,7 +41,7 @@ This method performs division, and though it would work with doubles, It may end
 fractions  
 I plan to implement a runtime tester method to visually see the different runtimes
 
-##Notes  
+## Notes  
 It seems that large input values that result in large determinants break for row reduction. This is likely due to
 how some things are calculated in the Fraction method (big numbers are reached and go past the maximum value of an integer when 
 calculating things like least common multiple, which explains why it breaks when the actual determinant still remains less than
