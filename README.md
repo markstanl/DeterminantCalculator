@@ -1,7 +1,8 @@
 # Determinant Calculator
 Java project to solve the determinant of a matrix using multiple different methods  
 Three class to solve determinants, by the summation definition, cofactor expansion, and row reduction  
-@TODO I will implement a driver, and some runtime tests  
+There is also a driver, and runtime tester  
+@TODO test for row reduction in big number fraction cases
 
 ## Determinant Summation
 ### Runtime Complexity: O(n!)
