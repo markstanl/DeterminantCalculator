@@ -32,6 +32,13 @@ This runtime is much better than its predecessors for larger matricies.
 ![O(n!)](https://github.com/markstanl/DeterminantCalculator/assets/146277800/cf2d904b-c21d-41be-83b6-8f148f4b1943)
 
 O(n^3) obviously grows much slower for larger matricies
+## Tested Runtime  
+Due to a likely poor-implemenation of the summation method, it seems like the summation method is quite slower
+than the cofactor expansion method. The row reduction method is obviously the best, as we can see with this image.  
+Though hard to see, the row reduction method does seem consistent with O(n^3)
+
+[Runtime of Determinants Comparison.pdf](https://github.com/markstanl/DeterminantCalculator/files/13731475/Runtime.of.Determinants.Comparison.pdf)
+
 
 ## Other Classes
 I implemented a utility class with various helpful methods, so I don't need to create the same method in 
@@ -39,7 +46,7 @@ every class
 I also implemented a fraction class which is used in the row reduction. This was to make everything look a little nicer  
 This method performs division, and though it would work with doubles, It may end with some weird number, so I used 
 fractions  
-I plan to implement a runtime tester method to visually see the different runtimes
+I implemented a runtime tester to help quantify the amount of time it takes each method to solve the determinant
 
 ## Notes  
 It seems that large input values that result in large determinants break for row reduction. This is likely due to
