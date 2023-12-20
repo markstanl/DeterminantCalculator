@@ -120,10 +120,10 @@ public class RowReduction {
       subtractRow(i, columnIndex, multi);
     }
     
-    multiplier.invert(); // inverts the multipler then returns it
+    multiplier.invert(); // inverts the multiplier then returns it
     
     if (nonzeroRow != columnIndex)
-      multiplier.multiply(new Fraction(-1)); // if we did a swap our matrix is mulplied by -1
+      multiplier.multiply(new Fraction(-1)); // if we did a swap our matrix is multiplied by -1
     return multiplier;
   }
   

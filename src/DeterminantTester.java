@@ -306,13 +306,13 @@ public class DeterminantTester {
   }
 
   /**
-   * Fuzz tester for the determinants. Tests many different cases of matricies against other valid
+   * Fuzz tester for the determinants. Tests many different cases of matrices against other valid
    * implementations
    * 
    * @return false if all determinant methods don't return the same value, true if they do
    */
   public static boolean allDeterminantFuzzTester() {
-    ArrayList<int[][]> matricies = Utility.generateMatricies(2000, 73, 5, 6);// # of matricies,
+    ArrayList<int[][]> matricies = Utility.generateMatricies(2000, 73, 5, 6);// # of matrices,
                                                                              // random seed, max num
                                                                              // in matrix, max size
 

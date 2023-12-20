@@ -112,7 +112,7 @@ public class Utility {
   }
 
   /**
-   * isSquare method determins if a matrix is square
+   * isSquare method determines if a matrix is square
    * 
    * @param matrix the matrix we wish to check
    * @return true if the matrix is Square, false otherwise
@@ -220,16 +220,16 @@ public class Utility {
   }
 
   /**
-   * Generates different sized matricies and returns an arrayList full of them, the max size is 6
+   * Generates different sized matrices and returns an arrayList full of them, the max size is 6
    * 
-   * @param numOfMatricies the number of matricies we want generated
+   * @param numOfMatricies the number of matrices we want generated
    * @param seed           the seed of the random number generator
-   * @return the arrayList of matricies
+   * @return the arrayList of matrices
    */
   public static ArrayList<int[][]> generateMatricies(int numOfMatricies) {
     Random randGen = new Random();
     ArrayList<int[][]> returnArrayList = new ArrayList<int[][]>();
-    // runs a num of matricies amount of times
+    // runs a num of matrices amount of times
     for (int i = 0; i < numOfMatricies; i++) {
       int size = randGen.nextInt(6) + 1;
       int[][] addMatrix = new int[size][size];
@@ -246,11 +246,11 @@ public class Utility {
   }
 
   /**
-   * Same method as before, generates a bunch of different matricies, but this method has a
-   * parameter to cap the value of the numbers the matricies can have, and the size of the matrix , to make visual verification a
+   * Same method as before, generates a bunch of different matrices, but this method has a
+   * parameter to cap the value of the numbers the matrices can have, and the size of the matrix , to make visual verification a
    * little bit easier
    * 
-   * @param numOfMatricies the number of matricies we wish to generate
+   * @param numOfMatricies the number of matrices we wish to generate
    * @param seed           the seed of this random number generation
    * @param valCap         the maximum value of the absolute value, exclusive
    * @param sizeCap       the maximum size of a matrix
