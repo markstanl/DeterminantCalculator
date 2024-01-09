@@ -43,6 +43,25 @@ public class Utility {
       System.out.println(str + "]");
     }
   }
+  
+  /**
+   * method that prints out a string representation of a matrix [a11, a12, ... a1n] [a21, a22, ...
+   * a2n] [ : : ] [am1, am2, ... amn]
+   * 
+   * same method as before but with Fractions
+   * 
+   * @param matrix the 2d int array representing a matrix
+   */
+  public static void printMatrix(Fraction[][] matrix) {
+    for (int i = 0; i < matrix.length; i++) {
+      String str = "[";
+      for (int j = 0; j < matrix[i].length; j++) {
+        if(j != 0) str += ",";
+        str += " "+ matrix[i][j] ;
+      }
+      System.out.println(str + "]");
+    }
+  }
 
   /**
    * Prints a string representation of an array
@@ -308,5 +327,5 @@ public class Utility {
     } catch (InterruptedException e) {
     }
   }
-
+  
 }

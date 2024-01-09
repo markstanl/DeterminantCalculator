@@ -363,6 +363,46 @@ public class DeterminantTester {
     
     return true;
   }
+  
+  /**
+   * Trying to uncover the issue with large numbers struggling to be calculated with row reduction
+   * @return
+   */
+  public static boolean rowReductionBigNumbersErrorTest() {
+    ArrayList<int[][]> matricies = Utility.generateMatricies(50000, 73, 5000, 2);
+    
+    for(int i = 0 ; i < matricies.size(); i++) { 
+      RowReduction rowReduction = new RowReduction(matricies.get(i));
+      Cofactor cofactor = new Cofactor(matricies.get(i));
+      
+      if(!Utility.closeEnough(rowReduction.getDet().doubleVal(), cofactor.getDet())) {
+        Utility.printMatrix(matricies.get(i));
+        System.out.println("row reduction "+rowReduction.getDet());
+        System.out.println("cofactor "+cofactor.getDet());
+        
+        Fraction[][] matrix = Utility.toFractionMatrix(matricies.get(i)); 
+        
+        
+        //We are going to recreate the row reduction determinant solver to try and debug
+        Fraction multiplier = new Fraction(1);
+        multiplier.divide(matricies.get(i)[0][0]);
+        System.out.println(multiplier);
+        
+        Utility.printMatrix(matrix);
+        
+        for(int j = 0 ; j < matrix.length ; j++) {
+          matrix[0][j].multiply(multiplier);
+        }
+        
+        Utility.printMatrix(matrix);
+        
+        
+        return false;
+      }
+    }
+    
+    return false;
+  }
   /**
    * Private method that runs all of the tester methods
    * 
@@ -419,6 +459,6 @@ public class DeterminantTester {
   }
 
   public static void main(String[] args) {
-    runTests();
+    rowReductionBigNumbersErrorTest();
   }
 }
