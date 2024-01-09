@@ -1,5 +1,7 @@
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Public static class to help with various utility issues.
@@ -16,10 +18,11 @@ public class Utility {
     for (int i = 0; i < matrix.length; i++) {
       String str = "[";
       for (int j = 0; j < matrix[i].length; j++) {
-        str += " " + matrix[i][j] + ",";
+        if(j != 0) str += ",";
+        str += " "+ matrix[i][j] ;
       }
       System.out.println(str + "]");
-    }
+      }
   }
 
   /**
@@ -34,7 +37,8 @@ public class Utility {
     for (int i = 0; i < matrix.length; i++) {
       String str = "[";
       for (int j = 0; j < matrix[i].length; j++) {
-        str += " " + matrix[i][j] + ",";
+        if(j != 0) str += ",";
+        str += " "+ matrix[i][j] ;
       }
       System.out.println(str + "]");
     }
@@ -277,6 +281,32 @@ public class Utility {
     }
 
     return returnArrayList;
+  }
+  
+  /**
+   * Simple utility method to see if a string is parseable into an integer
+   * @param str   String value we wish to check
+   * @return      true if the string is an integer, false otherwise
+   */
+  public static boolean isInt(String str) {
+    try {
+      Integer.parseInt(str);
+      return true;
+    }
+    catch (NumberFormatException e) {
+      return false;
+    }
+  }
+  
+  /**
+   * Simple method to sleep for sleepSeconds number of seconds. Cleans up code quite well.
+   * @param sleepSeconds
+   */
+  public static void sleep(int sleepSeconds) {
+    try {
+      TimeUnit.SECONDS.sleep(sleepSeconds);
+    } catch (InterruptedException e) {
+    }
   }
 
 }
