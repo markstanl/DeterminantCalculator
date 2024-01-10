@@ -1,24 +1,30 @@
 # Determinant Calculator
-Java project to solve the determinant of a matrix using multiple different methods  
-Three class to solve determinants, by the summation definition, cofactor expansion, and row reduction  
-There is also a driver, and runtime tester  
-@TODO test for row reduction in big number fraction cases
+Java project to solve the determinant of a matrix using multiple methods  
+Three classes to solve determinants, by the summation definition, cofactor expansion, and row reduction  
+There is also a driver and runtime tester  
 
 ## Determinant Summation
 ### Runtime Complexity: O(n!)
 The algorithm I used can likely be implemented a little bit better. Fundamentally the runtime complexity is O(n!), but my implementation
-takes O(n!) to calculate the permutations, O(n!) to calculate the signs of each permutation, then O(n!) again to calculate the sums.
-This can be made better by finding the sign during the permutation generator
+is likely a little bit worse due to a few unnecessary computations. This method also uses doubles, meaning it isn't largely that accurate for larger determinants,
+but works well for lower values
 
 ## Cofactor Expansion
 ### Runtime Complexity: O(n!)
-This one is slightly more efficent, as it just takes the first, row, and multiplies each constant by itself multiplied by -1^index by the 
-determininant of the resulting minor. It does this for every value. 
+Cofactor expansion is slightly more efficient and was the method I was taught to use long ago. 
+It just takes the first, row, and takes each value in the first row by itself multiplied by -1^index and multiplies it by 
+the determinant of the resulting minor. It does this for every value. We do this method using recursion.
+
+Strategically when one performs this method in real life, you would generally look for the 'easiest' row or column, to reduce
+computations, but an implementation that searches for the 'easiest' row or column is likely slower at smaller matrices.
+It might be worth doing though for larger matrices. This could be another fun class to try.
 
 ## Row Reduction
 ### Runtime Complexity: O(n^3)
-This runtime is much better than its predecessors for larger matricies. 
+The Row Reduction is the best implementation out of the 3. It has a runtime of O(n^3), significantly better than the aforementioned, as we
+can see here: 
 
+  
 | N | O(n!)  | O(n^3) |
 | --| -------| ------ |
 | 1 | 1      | 1      |
@@ -32,25 +38,28 @@ This runtime is much better than its predecessors for larger matricies.
 
 ![O(n!)](https://github.com/markstanl/DeterminantCalculator/assets/146277800/cf2d904b-c21d-41be-83b6-8f148f4b1943)
 
-O(n^3) obviously grows much slower for larger matricies
+O(n^3) grows much slower for larger matrices. This class uses the Fraction class as a replacement for numbers. More details on that later.
+We first reduce the first row and column so that the pivot (index of the matrix where the column index = row index) is 1. We then temporarily
+multiply the row by the value in the next row, same column, and then subtract each value in the row below it by the first row. We repeat this
+process until each row has been reduced, and then move on to the next pivot on the diagonal. The product of the number the diagonals initially get 
+divided by is the determinant.
+
+There are also some extra checks to get done early involving a determinant of 0, but other than that it is a great runtime and uses BigInteger to store lots of data.
+
+
+
 ## Tested Runtime  
-Due to a likely poor-implemenation of the summation method, it seems like the summation method is quite slower
-than the cofactor expansion method. The row reduction method is obviously the best, as we can see with this image.  
-Though hard to see, the row reduction method does seem consistent with O(n^3)
+The summation method has the worst runtime. Cofactor is slightly better. Row reduction method is obviously the best, as we can see in this image.  
+Though hard to see, the row reduction method does seem consistent with O(n^3). As implemented in the runtime test class, you yourself
+can see the difference in runtime.
 
 [Runtime of Determinants Comparison.pdf](https://github.com/markstanl/DeterminantCalculator/files/13731475/Runtime.of.Determinants.Comparison.pdf)
 
 
 ## Other Classes
-I implemented a utility class with various helpful methods, so I don't need to create the same method in 
-every class  
-I also implemented a fraction class which is used in the row reduction. This was to make everything look a little nicer  
-This method performs division, and though it would work with doubles, It may end with some weird number, so I used 
-fractions  
-I implemented a runtime tester to help quantify the amount of time it takes each method to solve the determinant
+### Fraction
+### Driver
+### Utility
+### Tester
+### Runtime
 
-## Notes  
-It seems that large input values that result in large determinants break for row reduction. This is likely due to
-how some things are calculated in the Fraction method (big numbers are reached and go past the maximum value of an integer when 
-calculating things like least common multiple, which explains why it breaks when the actual determinant still remains less than
-the greatest value of an integer.
