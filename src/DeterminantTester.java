@@ -343,66 +343,106 @@ public class DeterminantTester {
 
   /**
    * It seems that sometimes row reduction throws an unexpected divide by 0 error.
+   * 
    * @TODO get to the bottom of this
-   * @return    true if all tests pass, false otherwise
+   * @return true if all tests pass, false otherwise
    */
   public static boolean rowReductionErrorTest() {
     ArrayList<int[][]> matricies = Utility.generateMatricies(50000, 73, 5, 8);
-    
-    for(int i = 0 ; i < matricies.size(); i++) {
+
+    for (int i = 0; i < matricies.size(); i++) {
       try {
         RowReduction rowReduction = new RowReduction(matricies.get(i));
-      }
-      catch (IllegalArgumentException e) {
+      } catch (IllegalArgumentException e) {
         System.out.println("Caught an exception");
         Utility.printMatrix(matricies.get(i));
         return false;
       }
     }
-    
-    
+
+
     return true;
   }
-  
+
   /**
    * Trying to uncover the issue with large numbers struggling to be calculated with row reduction
+   * 
    * @return
    */
   public static boolean rowReductionBigNumbersErrorTest() {
+
     ArrayList<int[][]> matricies = Utility.generateMatricies(50000, 73, 5000, 2);
-    
-    for(int i = 0 ; i < matricies.size(); i++) { 
+
+    for (int i = 0; i < matricies.size(); i++) {
       RowReduction rowReduction = new RowReduction(matricies.get(i));
       Cofactor cofactor = new Cofactor(matricies.get(i));
-      
-      if(!Utility.closeEnough(rowReduction.getDet().doubleVal(), cofactor.getDet())) {
+
+      if (!Utility.closeEnough(rowReduction.getDet().doubleVal(), cofactor.getDet())) {
         Utility.printMatrix(matricies.get(i));
-        System.out.println("row reduction "+rowReduction.getDet());
-        System.out.println("cofactor "+cofactor.getDet());
-        
-        Fraction[][] matrix = Utility.toFractionMatrix(matricies.get(i)); 
-        
-        
-        //We are going to recreate the row reduction determinant solver to try and debug
+        System.out.println("row reduction " + rowReduction.getDet());
+        System.out.println("cofactor " + cofactor.getDet());
+
+        Fraction[][] matrix = Utility.toFractionMatrix(matricies.get(i));
+
+
+        // We are going to recreate the row reduction determinant solver to try and debug
         Fraction multiplier = new Fraction(1);
         multiplier.divide(matricies.get(i)[0][0]);
         System.out.println(multiplier);
-        
-        Utility.printMatrix(matrix);
-        
-        for(int j = 0 ; j < matrix.length ; j++) {
+
+        //Utility.printMatrix(matrix);
+
+        for (int j = 0; j < matrix.length; j++) {
           matrix[0][j].multiply(multiplier);
         }
         
+        //Utility.printMatrix(matrix);
+        
+        //VISUAL CHECK HAS CONFIRMED THAT THESE WORK
+        System.out.println();
+
+        // starts at the second row
+        for (int j = 0 + 1; j < matrix.length; j++) {
+          // creates this new to multiply number, which is the second row first number
+          Fraction multi = new Fraction(1);
+          multi.multiply(matrix[j][0]);
+
+          // we then simply want to subtract (the number in the first row times the multiplier), and
+          // subtract that from the number in the row below
+          for (int k = 0; k < matrix.length; k++) {
+            Utility.printMatrix(matrix);
+            
+            Fraction toSubtract = matrix[j-1][k].copy(); //should be 1, 0 or 1, 1
+     
+            toSubtract.multiply(multi);
+            
+            //System.out.println(toSubtract);
+            
+            matrix[j][k].subtract(toSubtract);
+            
+            System.out.println();
+          }
+        }
+        
         Utility.printMatrix(matrix);
-        
-        
+
+
         return false;
       }
     }
-    
+
     return false;
   }
+  
+  public static void sideHypothesisTest() {
+    Fraction firstMult = new Fraction(3025);
+    Fraction secondMult = new Fraction(873391,605);
+    
+    firstMult.multiply(secondMult);
+    
+    System.out.println(firstMult);
+  }
+
   /**
    * Private method that runs all of the tester methods
    * 
@@ -448,9 +488,9 @@ public class DeterminantTester {
 
     String resultallDeterminantFuzzTester = allDeterminantFuzzTester ? "pass" : "fail";
     System.out.println("allDeterminantFuzzTester: " + resultallDeterminantFuzzTester);
-    
+
     String resultrowReductionErrorTest = rowReductionErrorTest ? "pass" : "fail";
-    System.out.println("rowReductionErrorTest: "+ resultrowReductionErrorTest);
+    System.out.println("rowReductionErrorTest: " + resultrowReductionErrorTest);
 
     return matrixCompressor && cofactorSolverTestSizeTwo && cofactorSolverTestSizeThree
         && sumSignTester && sumConstructor && sumDeterminantSolver && fractionMethods
@@ -460,5 +500,6 @@ public class DeterminantTester {
 
   public static void main(String[] args) {
     rowReductionBigNumbersErrorTest();
+    sideHypothesisTest();
   }
 }
