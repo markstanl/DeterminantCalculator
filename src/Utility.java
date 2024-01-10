@@ -1,5 +1,6 @@
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -216,6 +217,20 @@ public class Utility {
     }
     return gcd(n2, n1 % n2);
   }
+  
+  /**
+   * Finds the greatest common divisor of the 2 Big Integers
+   * 
+   * @param n1 the first big integer
+   * @param n2 the second
+   * @return  the greatest common divisor
+   */
+  public static BigInteger gcd(BigInteger n1, BigInteger n2) {
+    if (n2.equals(BigInteger.ZERO)) {
+      return n1;
+    }
+    return gcd(n2, n1.mod(n2));
+  }
 
   /**
    * Finds the least common multiple of two Fractions. Does so by calling another method
@@ -224,8 +239,8 @@ public class Utility {
    * @param n2 The second fraction
    * @return the integer of the least common multiple
    */
-  public static int lcm(Fraction n1, Fraction n2) {
-    if (n1.getDenom() != 1 || n2.getDenom() != 1) {
+  public static BigInteger lcm(Fraction n1, Fraction n2) {
+    if (!n1.getDenom().equals(BigInteger.ONE) || !n2.getDenom().equals(BigInteger.ONE)) {
       throw new IllegalArgumentException("One fraction has a denominator. We only deal with ints");
     } else
       return lcm(n1.toInt(), n2.toInt());
@@ -240,6 +255,17 @@ public class Utility {
    */
   public static int lcm(int n1, int n2) {
     return n1 * n2 / gcd(n1, n2); // this is a common way to calculate the least common multiple
+  }
+  
+  /**
+   * Finds the least common multiplier of two big integers
+   * 
+   * @param n1  the first big integer
+   * @param n2  the second big integer
+   * @return the least common multiple
+   */
+  public static BigInteger lcm(BigInteger n1, BigInteger n2) {
+    return n1.multiply(n2).divide( gcd(n1, n2));
   }
 
   /**

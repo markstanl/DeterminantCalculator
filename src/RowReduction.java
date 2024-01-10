@@ -59,8 +59,6 @@ public class RowReduction {
     Fraction runningDet = new Fraction(1);
     // Iterates through every row in the matrix
     for (int i = 0; i < this.size; i++) {
-      
-      System.out.println("    test:"+runningDet);
       // reduces at that row
       Fraction returned = rowReduceAt(i);
       // if the row reduction results in a 0, that row is empty and therefore the det is 0
@@ -70,9 +68,6 @@ public class RowReduction {
       }
       // else keep the continuous running count
       runningDet.multiply(returned);
-      
-      System.out.println("    test:"+runningDet);
-      
       //if(this.size == 5) System.out.println(this);
       //System.out.println(this);
     }
@@ -124,12 +119,8 @@ public class RowReduction {
       subtractRow(i, columnIndex, multi);
     }
     
-    System.out.println("      second test:"+multiplier);
-    
     multiplier.invert(); // inverts the multiplier then returns it
-    
-    System.out.println("         third test:"+multiplier);
-    
+       
     if (nonzeroRow != columnIndex)
       multiplier.multiply(new Fraction(-1)); // if we did a swap our matrix is multiplied by -1
     return multiplier;

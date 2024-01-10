@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 
 /**
  * Fraction class. Sets up a new number system. Has a numerator and denominator, as well as various
@@ -5,8 +6,8 @@
  */
 public class Fraction implements Comparable<Fraction> {
 
-  private int numerator; // the numerator
-  private int denominator; // the denominator
+  private BigInteger numerator; // the numerator
+  private BigInteger denominator; // the denominator
 
   /**
    * First constructor for a fraction. Takes a single input, the numerator
@@ -14,9 +15,9 @@ public class Fraction implements Comparable<Fraction> {
    * @param numerator the new numerator
    */
   public Fraction(int numerator) {
-    this.numerator = numerator;
-    this.denominator = 1;
-    this.reduce(); // always call the reduce function whenever we do anything
+    this.numerator = new BigInteger(Integer.toString(numerator));
+    this.denominator = BigInteger.ONE;
+    reduce();
   }
 
   /**
@@ -26,8 +27,18 @@ public class Fraction implements Comparable<Fraction> {
    * @param denominator the denominator of the fraction
    */
   public Fraction(int numerator, int denominator) {
-    if (denominator == 0)
+    if (denominator == 0) {
       throw new IllegalArgumentException("cannot divide by zero");
+    }
+    this.numerator = new BigInteger(Integer.toString(numerator));
+    this.denominator = new BigInteger(Integer.toString(denominator));
+    reduce();
+  }
+
+  public Fraction(BigInteger numerator, BigInteger denominator) {
+    if (denominator.equals(BigInteger.ZERO)) {
+      throw new IllegalArgumentException("cannot divide by zero");
+    }
     this.numerator = numerator;
     this.denominator = denominator;
     reduce();
@@ -39,7 +50,7 @@ public class Fraction implements Comparable<Fraction> {
    * @param toMult the integer to multiply this fraction by
    */
   public void multiply(int toMult) {
-    numerator *= toMult;
+    this.numerator = numerator.multiply(new BigInteger(Integer.toString(toMult)));
     reduce();
   }
 
@@ -49,8 +60,8 @@ public class Fraction implements Comparable<Fraction> {
    * @param toMult the fraction to multiply by
    */
   public void multiply(Fraction toMult) {
-    this.numerator *= toMult.numerator;
-    this.denominator *= toMult.denominator;
+    this.numerator = this.numerator.multiply(toMult.numerator);
+    this.denominator = this.denominator.multiply(toMult.denominator);
     reduce();
   }
 
@@ -73,7 +84,7 @@ public class Fraction implements Comparable<Fraction> {
   public void divide(int divisor) {
     if (divisor == 0)
       throw new IllegalArgumentException("cannot divide by zero");
-    denominator *= divisor;
+    this.denominator = this.denominator.multiply(new BigInteger(Integer.toString(divisor)));
     reduce();
   }
 
@@ -85,7 +96,7 @@ public class Fraction implements Comparable<Fraction> {
    */
   private Fraction invert(Fraction toInvert) {
     Fraction returnInvert = toInvert.copy();
-    int save = returnInvert.denominator;
+    BigInteger save = returnInvert.denominator;
     returnInvert.denominator = returnInvert.numerator;
     returnInvert.numerator = save;
     returnInvert.reduce();
@@ -96,7 +107,7 @@ public class Fraction implements Comparable<Fraction> {
    * Inverts the function. The other function returns a copy of an inverse
    */
   public void invert() {
-    int save = this.denominator;
+    BigInteger save = this.denominator;
     this.denominator = this.numerator;
     this.numerator = save;
     reduce();
@@ -109,12 +120,14 @@ public class Fraction implements Comparable<Fraction> {
    */
   public void subtract(Fraction subtractor) {
     Fraction subtractorCopy = subtractor.copy();
-    int lcm = Utility.lcm(this.denominator, subtractorCopy.denominator);
-    this.numerator *= lcm / this.denominator;
-    subtractorCopy.numerator *= lcm / subtractorCopy.denominator;
-    this.denominator *= lcm / this.denominator;
-    subtractorCopy.denominator *= lcm / subtractorCopy.denominator;
-    this.numerator -= subtractorCopy.numerator;
+    BigInteger lcm = Utility.lcm(this.denominator, subtractorCopy.denominator);
+    this.numerator = this.numerator.multiply(lcm.divide(this.denominator));
+    subtractorCopy.numerator =
+        subtractorCopy.numerator.multiply(lcm.divide(subtractorCopy.denominator));
+    this.denominator = this.denominator.multiply(lcm.divide(this.denominator));
+    subtractorCopy.denominator =
+        subtractorCopy.denominator.multiply(lcm.divide(subtractorCopy.denominator));
+    this.numerator = this.numerator.subtract(subtractorCopy.numerator);
     reduce();
   }
 
@@ -124,7 +137,7 @@ public class Fraction implements Comparable<Fraction> {
    * @return
    */
   public double doubleVal() {
-    return ((double) this.numerator) / ((double) this.denominator);
+    return (this.numerator.doubleValue()) / (this.denominator.doubleValue());
   }
 
   /**
@@ -140,18 +153,40 @@ public class Fraction implements Comparable<Fraction> {
    * reduces this fraction
    */
   private void reduce() {
-    if (this.numerator == 0 || this.denominator == 0) {
-      this.denominator = 1;
-      this.numerator = 0;
+    if (this.numerator.equals(BigInteger.ZERO) || this.denominator.equals(BigInteger.ZERO)) {
+      this.denominator = BigInteger.ONE;
+      this.numerator = BigInteger.ZERO;
     }
-    int gcd = this.gcd();
-    if (gcd != 1) {
-      this.numerator /= gcd;
-      this.denominator /= gcd;
+    
+    BigInteger gcd = BigInteger.ONE;
+
+    //gcd has issues with negatives in the denominator, here is where we deal with them
+    if (this.denominator.compareTo(BigInteger.ZERO) < 0) {
+      BigInteger tempDenominator = this.denominator;
+      
+      if(this.denominator.compareTo(BigInteger.ZERO) < 0) {
+        BigInteger tempMult = new BigInteger("-1");
+        tempDenominator = tempDenominator.multiply(tempMult);
+      }
+      
+      gcd = Utility.gcd(numerator, tempDenominator);
+
+      if(this.denominator.compareTo(BigInteger.ZERO) < 0) {
+        gcd.multiply(new BigInteger("-1"));
+      }
     }
-    if (denominator < 0) {
-      this.numerator *= -1;
-      this.denominator *= -1;
+    else {
+    gcd = this.gcd();}
+    
+    
+
+    if (!gcd.equals(BigInteger.ONE)) {
+      this.numerator = this.numerator.divide(gcd);
+      this.denominator = this.denominator.divide(gcd);
+    }
+    if (denominator.compareTo(BigInteger.ZERO) < 0) {
+      this.numerator = this.numerator.multiply(new BigInteger("-1"));
+      this.denominator = this.denominator.multiply(new BigInteger("-1"));
     }
   }
 
@@ -160,7 +195,7 @@ public class Fraction implements Comparable<Fraction> {
    * 
    * @return
    */
-  private int gcd() {
+  private BigInteger gcd() {
     return Utility.gcd(this.numerator, this.denominator);
   }
 
@@ -169,7 +204,7 @@ public class Fraction implements Comparable<Fraction> {
    * 
    * @return the integer value for the denominator
    */
-  public int getDenom() {
+  public BigInteger getDenom() {
     return this.denominator;
   }
 
@@ -179,8 +214,8 @@ public class Fraction implements Comparable<Fraction> {
    * @return the integer value of the fraction
    * @throws IllegalStateException if it cannot be parsed into an integer
    */
-  public int toInt() {
-    if (this.denominator != 1)
+  public BigInteger toInt() {
+    if (!this.denominator.equals(BigInteger.ONE))
       throw new IllegalStateException("mus'nt have a denominator");
     else
       return this.numerator;
@@ -195,10 +230,10 @@ public class Fraction implements Comparable<Fraction> {
   @Override
   public String toString() {
     // if the denominator is 1, no need to do any fancy things, return 1
-    if (this.denominator == 1)
-      return Integer.toString(this.numerator);
+    if (this.denominator.equals(BigInteger.ONE))
+      return (this.numerator.toString());
     else
-      return Integer.toString(this.numerator) + "/" + Integer.toString(this.denominator);
+      return (this.numerator.toString()) + "/" + (this.denominator.toString());
   }
 
   /**
@@ -208,7 +243,7 @@ public class Fraction implements Comparable<Fraction> {
    * @return true if the fractions are equal, false otherwise
    */
   public boolean equals(Fraction other) {
-    return this.numerator == other.numerator && this.denominator == other.denominator;
+    return this.numerator.equals(other.numerator) && this.denominator.equals(other.denominator);
   }
 
   /**

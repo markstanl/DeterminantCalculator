@@ -1,5 +1,7 @@
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Random;
+import java.math.BigInteger;
 
 /**
  * Determinant tester class, tests the functionality of all different determinant testers
@@ -180,13 +182,14 @@ public class DeterminantTester {
    * @return true if the method acts as expected, false otherwise
    */
   public static boolean fractionMethods() {
-    Fraction num1 = new Fraction(8, 6);
 
     /*
      * if(num1.gcd() != 2) { System.out.println("fraction methods test 1 fail");
      * System.out.println("Expected GCD: 2  actual gcd: "+num1.gcd()); }
      */
     // METHOD WORKS AS EXPECTED, BUT WANT TO KEEP GCD METHOD PRIVATE
+
+
 
     Fraction num2 = new Fraction(8, 2);
     num2.divide(2);
@@ -197,6 +200,8 @@ public class DeterminantTester {
     }
     num2.divide(3);
 
+    Fraction num1 = new Fraction(8, 6);
+
     if (!num2.toString().equals("2/3")) {
       System.out.println("  fractionMethods test 3 fail");
       System.out.println("  expected string num2: 2/3   actual: " + num2);
@@ -206,13 +211,13 @@ public class DeterminantTester {
     num2.multiply(3);
 
     if (!num2.toString().equals("2")) {
-      System.out.println("  fractionMethods test 3 fail");
+      System.out.println("  fractionMethods test 4 fail");
       System.out.println("  expected string num2: 2   actual: " + num2);
       return false;
     }
 
     if (num2.compareTo(num1) != 1) {
-      System.out.println("  fractionmethods test 4 fail");
+      System.out.println("  fractionmethods test 5 fail");
       System.out.println("  expected compareto: 1 actual: " + num2.compareTo(num1));
       return false;
     }
@@ -220,7 +225,7 @@ public class DeterminantTester {
     Fraction num3 = new Fraction(0, 11);
 
     if (!num3.toString().equals("0")) {
-      System.out.println("  fractionmethods test 5 fail");
+      System.out.println("  fractionmethods test 6 fail");
       System.out.println("  expected compareto: 0 actual: " + num2.compareTo(num1));
       return false;
     }
@@ -230,7 +235,7 @@ public class DeterminantTester {
     num4.subtract(subtractor);
 
     if (num4.toString().compareTo("8/3") != 0) {
-      System.out.println("  fractionMethods test 6 fail");
+      System.out.println("  fractionMethods test 7 fail");
       System.out.println("  expected num4 after subtraction: 8/3 ");
       System.out.println("  actual num4: " + num4);
       return false;
@@ -238,7 +243,7 @@ public class DeterminantTester {
 
     try {
       num2.divide(0);
-      System.out.println("  fractionmethods test 7 fail");
+      System.out.println("  fractionmethods test 8 fail");
       System.out.println("  expected exception thrown");
       return false;
     } catch (IllegalArgumentException e) {
@@ -251,7 +256,7 @@ public class DeterminantTester {
     Fraction num6 = new Fraction(6, 10);
 
     if (!num5.equals(num6)) {
-      System.out.println("  fractionmethods test 8 fail");
+      System.out.println("  fractionmethods test 9 fail");
       System.out.println("  expected product: " + num6);
       System.out.println("  actual product: " + num5);
       return false;
@@ -260,7 +265,7 @@ public class DeterminantTester {
     num5.divide(mult5);
 
     if (!num5.toString().equals("6/5")) {
-      System.out.println("  fraction methods test 9 fail");
+      System.out.println("  fraction methods test 10 fail");
       System.out.println("  expeced: 6/5");
       System.out.println("  actual: " + num5);
       return false;
@@ -292,9 +297,9 @@ public class DeterminantTester {
     Fraction[][] testMatrix2 = Utility.toFractionMatrix(tetMatrix2);
 
     RowReduction test2 = new RowReduction(testMatrix2);
-    int expectedDet2 = -12;
+    BigInteger expectedDet2 = new BigInteger("-12");
 
-    if (test2.getDet().toInt() != expectedDet2) {
+    if (!test2.getDet().toInt().equals(expectedDet2)) {
       System.out.println("row reducion test 2 fail");
       System.out.println("expected det: -12");
       System.out.println("actual det: " + test2.getDet().toInt());
@@ -312,7 +317,7 @@ public class DeterminantTester {
    * @return false if all determinant methods don't return the same value, true if they do
    */
   public static boolean allDeterminantFuzzTester() {
-    ArrayList<int[][]> matricies = Utility.generateMatricies(2000, 73, 5, 6);// # of matrices,
+    ArrayList<int[][]> matricies = Utility.generateMatricies(2000, 73, 5, 8);// # of matrices,
                                                                              // random seed, max num
                                                                              // in matrix, max size
 
@@ -382,65 +387,49 @@ public class DeterminantTester {
         System.out.println("row reduction " + rowReduction.getDet());
         System.out.println("cofactor " + cofactor.getDet());
 
-        Fraction[][] matrix = Utility.toFractionMatrix(matricies.get(i));
-
-
-        // We are going to recreate the row reduction determinant solver to try and debug
-        Fraction multiplier = new Fraction(1);
-        multiplier.divide(matricies.get(i)[0][0]);
-        System.out.println(multiplier);
-
-        //Utility.printMatrix(matrix);
-
-        for (int j = 0; j < matrix.length; j++) {
-          matrix[0][j].multiply(multiplier);
-        }
-        
-        //Utility.printMatrix(matrix);
-        
-        //VISUAL CHECK HAS CONFIRMED THAT THESE WORK
-        System.out.println();
-
-        // starts at the second row
-        for (int j = 0 + 1; j < matrix.length; j++) {
-          // creates this new to multiply number, which is the second row first number
-          Fraction multi = new Fraction(1);
-          multi.multiply(matrix[j][0]);
-
-          // we then simply want to subtract (the number in the first row times the multiplier), and
-          // subtract that from the number in the row below
-          for (int k = 0; k < matrix.length; k++) {
-            Utility.printMatrix(matrix);
-            
-            Fraction toSubtract = matrix[j-1][k].copy(); //should be 1, 0 or 1, 1
-     
-            toSubtract.multiply(multi);
-            
-            //System.out.println(toSubtract);
-            
-            matrix[j][k].subtract(toSubtract);
-            
-            System.out.println();
-          }
-        }
-        
-        Utility.printMatrix(matrix);
+        /**
+         * Fraction[][] matrix = Utility.toFractionMatrix(matricies.get(i));
+         * 
+         * 
+         * // We are going to recreate the row reduction determinant solver to try and debug
+         * Fraction multiplier = new Fraction(1); multiplier.divide(matricies.get(i)[0][0]);
+         * System.out.println(multiplier);
+         * 
+         * //Utility.printMatrix(matrix);
+         * 
+         * for (int j = 0; j < matrix.length; j++) { matrix[0][j].multiply(multiplier); }
+         * 
+         * //Utility.printMatrix(matrix);
+         * 
+         * //VISUAL CHECK HAS CONFIRMED THAT THESE WORK System.out.println();
+         * 
+         * // starts at the second row for (int j = 0 + 1; j < matrix.length; j++) { // creates this
+         * new to multiply number, which is the second row first number Fraction multi = new
+         * Fraction(1); multi.multiply(matrix[j][0]);
+         * 
+         * // we then simply want to subtract (the number in the first row times the multiplier),
+         * and // subtract that from the number in the row below for (int k = 0; k < matrix.length;
+         * k++) { Utility.printMatrix(matrix);
+         * 
+         * Fraction toSubtract = matrix[j-1][k].copy(); //should be 1, 0 or 1, 1
+         * 
+         * toSubtract.multiply(multi);
+         * 
+         * //System.out.println(toSubtract);
+         * 
+         * matrix[j][k].subtract(toSubtract);
+         * 
+         * System.out.println(); } }
+         * 
+         * Utility.printMatrix(matrix);
+         */
 
 
         return false;
       }
     }
 
-    return false;
-  }
-  
-  public static void sideHypothesisTest() {
-    Fraction firstMult = new Fraction(3025);
-    Fraction secondMult = new Fraction(873391,605);
-    
-    firstMult.multiply(secondMult);
-    
-    System.out.println(firstMult);
+    return true;
   }
 
   /**
@@ -460,6 +449,7 @@ public class DeterminantTester {
     boolean rowReductionTest = rowReductionTest();
     boolean allDeterminantFuzzTester = allDeterminantFuzzTester();
     boolean rowReductionErrorTest = rowReductionErrorTest();
+    boolean rowReductionBigNumbersErrorTest = rowReductionBigNumbersErrorTest();
 
 
     String resultMatrixCompressor = matrixCompressor ? "pass" : "fail";
@@ -492,14 +482,18 @@ public class DeterminantTester {
     String resultrowReductionErrorTest = rowReductionErrorTest ? "pass" : "fail";
     System.out.println("rowReductionErrorTest: " + resultrowReductionErrorTest);
 
+    String resultrowReductionBigNumbersErrorTest =
+        rowReductionBigNumbersErrorTest ? "pass" : "fail";
+    System.out.println("rowReductionBigNumbersErrorTest: " + resultrowReductionBigNumbersErrorTest);
+
     return matrixCompressor && cofactorSolverTestSizeTwo && cofactorSolverTestSizeThree
         && sumSignTester && sumConstructor && sumDeterminantSolver && fractionMethods
-        && rowReductionTest && allDeterminantFuzzTester && rowReductionErrorTest;
+        && rowReductionTest && allDeterminantFuzzTester && rowReductionErrorTest
+        && rowReductionBigNumbersErrorTest;
 
   }
 
   public static void main(String[] args) {
-    rowReductionBigNumbersErrorTest();
-    sideHypothesisTest();
+    allDeterminantFuzzTester();
   }
 }

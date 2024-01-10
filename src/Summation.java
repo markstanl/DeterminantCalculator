@@ -77,7 +77,7 @@ public class Summation {
       det += runningPermVal;
     }
     //no clue why I have to add this but it works
-    if(size >3) det *= Math.pow(-1, size);
+    if(size >3) det *= -1;
     this.det = det;
   }
 
