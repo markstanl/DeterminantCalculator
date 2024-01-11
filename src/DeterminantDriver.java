@@ -24,7 +24,7 @@ public class DeterminantDriver {
     System.out.println("--------------------------------------------------------------------");
     System.out.println("1) Randomly generate a new matrix");
     System.out.println("2) Input your own matrix");
-    System.out.println("3) Solve the determinant by summation");
+    System.out.println("3) Solve the determinant by Leibniz Formula");
     System.out.println("4) Solve the determinant by cofactor expansion");
     System.out.println("5) Solve the determinant by row reduction");
     System.out.println("6) Exit");
@@ -110,9 +110,50 @@ public class DeterminantDriver {
 
     if (command.equals("Exit")) { // now we just need to check if the user didn't give up mid-way
                                   // through
-      System.out.println("You are now exiting the matrix generation, and have not made a matrix");
+      System.out.println("You are now exiting the matrix generation, and have not made a new matrix");
     } else
       this.matrix = returnMatrix;
+
+
+  }
+
+  private void randGenMatrix() {
+    String command = "";
+    boolean done = false;
+
+    System.out.println("--------------------------------------------------------------------");
+    System.out.println("What size matrix do you want? Type 0 for random");
+    System.out.println("Type 'Exit' to exit matrix generation");
+
+    while (!command.equals("Exit") && !done) {
+      command = scanner.nextLine();
+
+      if (Utility.isInt(command.strip())) {
+        int commandInt = Integer.parseInt(command);
+        if (commandInt >= 0) {
+          if(commandInt == 0) {
+            this.matrix = Utility.generateMatricies(1).get(0);
+            System.out.println("Here is your generated matrix");
+            Utility.printMatrix(matrix);
+            done = true;
+          }
+          else {
+            this.matrix = Utility.generateMatricies(1, 43, 40, commandInt).get(0);
+            System.out.println("Here is your generated matrix");
+            Utility.printMatrix(matrix);
+            done = true;
+          }
+        } else {
+          System.out.println("Please enter a valid number");
+        }
+      } else {
+        System.out.println("Please enter a number");
+      }
+    }
+
+    if (command.equals("Exit")) {
+      System.out.println("You are now exiting the matrix generation, and have not made a new matrix");
+    }
 
 
   }
@@ -134,23 +175,22 @@ public class DeterminantDriver {
 
 
       if (command.strip().equals("1")) {
-        this.matrix = Utility.generateMatricies(1).get(0);
-        System.out.println("Here is your generated matrix");
-        Utility.printMatrix(matrix);
+        randGenMatrix();
         Utility.sleep(3);
-        
       } else if (command.strip().equals("2")) {
         userInputMatrix();
-        if(matrix != null) {System.out.println("Here is your inputted matrix");
-        Utility.printMatrix(this.matrix);}
+        if (matrix != null) {
+          System.out.println("Here is your current matrix");
+          Utility.printMatrix(this.matrix);
+        }
         Utility.sleep(3);
-        
+
       } else if (command.strip().equals("3")) {
         if (matrix == null) {
           System.out
               .println("You must initialize a matrix before attempting to find the determinant");
-        Utility.sleep(2);}
-        else {
+          Utility.sleep(2);
+        } else {
           Instant start = Instant.now();
           Summation summation = new Summation(this.matrix);
           System.out.println("The determinant by summation is " + summation.getDet());
@@ -163,8 +203,8 @@ public class DeterminantDriver {
         if (matrix == null) {
           System.out
               .println("You must initialize a matrix before attempting to find the determinant");
-        Utility.sleep(2);}
-        else {
+          Utility.sleep(2);
+        } else {
           Instant start = Instant.now();
           Cofactor cofactor = new Cofactor(this.matrix);
           System.out.println("The determinant by cofactor is " + cofactor.getDet());

@@ -121,27 +121,23 @@ public class Runtime {
   private double determinNum(int i) {
     switch (i) {
       case 1:
-        return 1000000 * this.performanceMultiplier;
+        return 500_000 * this.performanceMultiplier;
       case (2):
-        return 700000 * this.performanceMultiplier;
+        return 150_000 * this.performanceMultiplier;
       case (3):
-        return 300000 * this.performanceMultiplier;
+        return 50_000 * this.performanceMultiplier;
       case (4):
-        return 80000 * this.performanceMultiplier;
+        return 20_000 * this.performanceMultiplier;
       case (5):
-        return 30000 * this.performanceMultiplier;
+        return 9_000 * this.performanceMultiplier;
       case (6):
-        return 5000 * this.performanceMultiplier;
+        return 2_500 * this.performanceMultiplier;
       case (7):
         return 500 * this.performanceMultiplier;
       case (8):
         return 60 * this.performanceMultiplier;
       case (9):
-        return 5 * this.performanceMultiplier;
-      case (10):
-        return 1 * this.performanceMultiplier;
-      case (11):
-        return 1 * this.performanceMultiplier;
+        return 8 * this.performanceMultiplier;
       default:
         return 1 * this.performanceMultiplier;
     }
@@ -209,7 +205,7 @@ public class Runtime {
     String returnStr = "";
     for (int i = 0; i < this.length; i++) {
       returnStr += "Size " + Integer.toString(i + 1) + " took " + Long.toString(eachTimeTaken[i])
-          + " seconds to find the determinant, and ran with " + determinNum(i + 1) + " matricies"
+          + " seconds to find the determinant, and ran with " + (int) determinNum(i + 1) + " matricies"
           + "\r\n";
       returnStr += "   Factorial Rate: " + factorialRate[i] + "\r\n";
       returnStr += "   Cubic Rate:     " + cubicRate[i] + "\r\n";
@@ -243,9 +239,9 @@ public class Runtime {
   public static void main(String[] args) {
     // The first parameter is the size of the maximum matrices, the second is a "performance"
     // multiplier. This changes the total number of matrices tested for each different size.
-    // 1 means normal, 0 means none. This class at 1 should take around first parameter seconds. if
-    // it takes more than this, it is recommended to change the second parameter
-    Runtime john = new Runtime(10, 1.0);
-    System.out.println(john);
+    // 1 means normal, 0 means none. It is recommended to start with a lower value, and then work 
+    // your way up to a larger value.
+    Runtime runtimeExperiment = new Runtime(10, 1.0);
+    System.out.println(runtimeExperiment);
   }
 }

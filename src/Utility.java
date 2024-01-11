@@ -136,18 +136,23 @@ public class Utility {
   }
 
   /**
-   * isSquare method determines if a matrix is square
+   * Converts an integer matrix into a fraction matrix
    * 
-   * @param matrix the matrix we wish to check
-   * @return true if the matrix is Square, false otherwise
+   * @param matrix the old integer matrix
+   * @return the new fraction matrix
    */
-  public static boolean isSquare(double[][] matrix) {
-    int m = matrix.length;
+  public static Fraction[][] toFractionMatrix(int[][] matrix) {
+    if (!isSquare(matrix))
+      throw new IllegalArgumentException("matrix must be square");
+    Fraction[][] returnMatrix = new Fraction[matrix.length][matrix.length]; // initializes the new
+                                                                            // 2d array
     for (int i = 0; i < matrix.length; i++) {
-      if (matrix[i].length != m)
-        return false;
+      for (int k = 0; k < matrix.length; k++) {
+        returnMatrix[i][k] = new Fraction(matrix[i][k]);
+      }
     }
-    return true;
+  
+    return returnMatrix;
   }
 
   /**
@@ -157,6 +162,21 @@ public class Utility {
    * @return true if the matrix is Square, false otherwise
    */
   public static boolean isSquare(int[][] matrix) {
+    int m = matrix.length;
+    for (int i = 0; i < matrix.length; i++) {
+      if (matrix[i].length != m)
+        return false;
+    }
+    return true;
+  }
+
+  /**
+   * isSquare method determines if a matrix is square
+   * 
+   * @param matrix the matrix we wish to check
+   * @return true if the matrix is Square, false otherwise
+   */
+  public static boolean isSquare(double[][] matrix) {
     int m = matrix.length;
     for (int i = 0; i < matrix.length; i++) {
       if (matrix[i].length != m)
@@ -181,23 +201,18 @@ public class Utility {
   }
 
   /**
-   * Converts an integer matrix into a fraction matrix
-   * 
-   * @param matrix the old integer matrix
-   * @return the new fraction matrix
+   * Simple utility method to see if a string is parseable into an integer
+   * @param str   String value we wish to check
+   * @return      true if the string is an integer, false otherwise
    */
-  public static Fraction[][] toFractionMatrix(int[][] matrix) {
-    if (!isSquare(matrix))
-      throw new IllegalArgumentException("matrix must be square");
-    Fraction[][] returnMatrix = new Fraction[matrix.length][matrix.length]; // initializes the new
-                                                                            // 2d array
-    for (int i = 0; i < matrix.length; i++) {
-      for (int k = 0; k < matrix.length; k++) {
-        returnMatrix[i][k] = new Fraction(matrix[i][k]);
-      }
+  public static boolean isInt(String str) {
+    try {
+      Integer.parseInt(str);
+      return true;
     }
-
-    return returnMatrix;
+    catch (NumberFormatException e) {
+      return false;
+    }
   }
 
   public static boolean closeEnough(double val1, double val2) {
@@ -233,6 +248,17 @@ public class Utility {
   }
 
   /**
+   * Finds the least common multiple of two integers
+   * 
+   * @param n1 the first integer
+   * @param n2 the second integer
+   * @return the least common multiple
+   */
+  public static int lcm(int n1, int n2) {
+    return n1 * n2 / gcd(n1, n2); // this is a common way to calculate the least common multiple
+  }
+
+  /**
    * Finds the least common multiple of two Fractions. Does so by calling another method
    * 
    * @param n1 The first fraction
@@ -246,17 +272,6 @@ public class Utility {
       return lcm(n1.toInt(), n2.toInt());
   }
 
-  /**
-   * Finds the least common multiple of two integers
-   * 
-   * @param n1 the first integer
-   * @param n2 the second integer
-   * @return the least common multiple
-   */
-  public static int lcm(int n1, int n2) {
-    return n1 * n2 / gcd(n1, n2); // this is a common way to calculate the least common multiple
-  }
-  
   /**
    * Finds the least common multiplier of two big integers
    * 
@@ -272,7 +287,6 @@ public class Utility {
    * Generates different sized matrices and returns an arrayList full of them, the max size is 6
    * 
    * @param numOfMatricies the number of matrices we want generated
-   * @param seed           the seed of the random number generator
    * @return the arrayList of matrices
    */
   public static ArrayList<int[][]> generateMatricies(int numOfMatricies) {
@@ -326,21 +340,6 @@ public class Utility {
     }
 
     return returnArrayList;
-  }
-  
-  /**
-   * Simple utility method to see if a string is parseable into an integer
-   * @param str   String value we wish to check
-   * @return      true if the string is an integer, false otherwise
-   */
-  public static boolean isInt(String str) {
-    try {
-      Integer.parseInt(str);
-      return true;
-    }
-    catch (NumberFormatException e) {
-      return false;
-    }
   }
   
   /**
