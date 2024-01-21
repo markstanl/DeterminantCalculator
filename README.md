@@ -1,29 +1,42 @@
 # Determinant Calculator
-Java project to solve the determinant of a matrix using multiple methods  
-Three classes to solve determinants, by the Leibniz formula, cofactor expansion, and row reduction  
-There is also a driver and runtime tester  
+["In mathematics, the determinant is a scalar value that is a function of the entries of a square matrix."]{https://en.wikipedia.org/wiki/Determinant}
+The determinant of a matrix is a value that contains important information about the square matrix it is derived from. This
+project contains three different methods to find that value. Use the driver for easy access, or the runtime experiment to
+see the runtime efficiency of each method.
 
 ## [Leibniz Formula](https://en.wikipedia.org/wiki/Leibniz_formula_for_determinants)
 ### Runtime Complexity: O(n!)
-The algorithm I used can likely be implemented a little bit better. Fundamentally the runtime complexity is O(n!), but my implementation
-is likely a little bit worse due to a few unnecessary computations. This method also uses doubles, meaning it isn't largely that accurate for larger determinants,
-but works well for lower values
+The Leibniz Formula finds the determinant as a sum of n! values, which are found using permutations.
+This method was introduced to me as the definition of a determinant, and as a simple way to first prove the determinant lemmas.
+This method uses doubles, making it less accurate for larger determinants but effective for smaller values.
 
 ## [Cofactor Expansion](https://en.wikipedia.org/wiki/Laplace_expansion)
 ### Runtime Complexity: O(n!)
-Cofactor expansion is slightly more efficient and was the method I was taught to use long ago. 
-It just takes the first, row, and takes each value in the first row by itself multiplied by -1^index and multiplies it by 
-the determinant of the resulting minor. It does this for every value. We do this method using recursion.
+Cofactor expansion is slightly more efficient.
+It is found using an interesting strategy. First, choose any row or column, mentally applying a + and - sign to each value in 
+your chosen tuple. Then, sum together each of the values in the row, multiplied by their sign, and the determinant of the resulting "minor" at their index.
+A "minor" at a given index is found by removing the row and column at a given index, and compressing the matrix, resulting in a new minor matrix size n-1.
+(For example, if we have a 3x3 matrix, and want to find the minor at the center value a22, the resulting minor is simply a 2x2 matrix, consisting of all the corner values of the original matrix).
+This method is employed recursively.
 
-Strategically when one performs this method in real life, you would generally look for the 'easiest' row or column, to reduce
-computations, but an implementation that searches for the 'easiest' row or column is likely slower at smaller matrices.
-It might be worth doing though for larger matrices. This could be another fun class to try.
+Strategically, when performing this method in real life, one might choose the 'easiest' row or column to reduce computations. 
+The idea here is if the value of a row is 0, you can ignore computing the resulting minor in computations.
+However, an implementation searching for the 'easiest' row or column might be slower for smaller matrices.
 
 ## [Row Reduction](https://en.wikipedia.org/wiki/Gaussian_elimination)
 ### Runtime Complexity: O(n^3)
-@IMPORTANT Because of the transition to BigInteger, Row Reduction takes a little bit longer than it did originally. This is most apparent on small-size matrices. 
-The Row Reduction is the best implementation out of the 3. It has a runtime of O(n^3), significantly better than the aforementioned, as we
-can see here: 
+⚠️ IMPORTANT: Due to the transition to BigInteger, Row Reduction takes a bit longer than the original version, especially noticeable on small-size matrices. 
+Row reduction is slightly more complicated than the other methods, I implore referring to the link to see how it is typically done.
+
+My implementation starts by looking for a non-zero pivot and switching that to the current diagonal pivot.
+It then divides the row such that the pivot value is 1. We then subtract each row underneath that pivot by the index row multiplied by
+whatever constant is required to make the value under the pivot become 0. 
+This constant is then multiplied into the running determinant value.
+This is done until we reach the bottom right index.
+Thus, the determinant is the final running determinant value. 
+
+
+Row Reduction is the most efficient among the three methods, with a runtime of O(n^3). This runtime improvement is evident in the following table:
 
   
 | N | O(n!)  | O(n^3) |
@@ -39,43 +52,36 @@ can see here:
 
 ![O(n!)](https://github.com/markstanl/DeterminantCalculator/assets/146277800/cf2d904b-c21d-41be-83b6-8f148f4b1943)
 
-O(n^3) grows much slower for larger matrices. This class uses the Fraction class as a replacement for numbers. More details on that later.
-We first reduce the first row and column so that the pivot (index of the matrix where the column index = row index) is 1. We then temporarily
-multiply the row by the value in the next row, same column, and then subtract each value in the row below it by the first row. We repeat this
-process until each row has been reduced, and then move on to the next pivot on the diagonal. The product of the number the diagonals initially get 
-divided by is the determinant.
-
-There are also some extra checks to get done early involving a determinant of 0, but other than that it is a great runtime and uses BigInteger to store lots of data.
-
+O(n^3) growth is significantly slower for larger matrices. This class uses the Fraction class as a replacement for numbers.
 
 
 ## Tested Runtime  
-The summation method has the worst runtime. The cofactor is slightly better. The row reduction method is the best, as we can see in this image.  
-Though hard to see, the row reduction method does seem consistent with O(n^3). As implemented in the runtime test class, you
-can see the difference in runtime based on your hardware.
+The summation (Leibniz) method has the worst runtime, while the cofactor is slightly better. The row reduction method is the best, consistently following O(n^3). 
+The runtime experiment class demonstrates the difference based on your hardware.
 
 [Runtime of Determinants Comparison.pdf](https://github.com/markstanl/DeterminantCalculator/files/13731475/Runtime.of.Determinants.Comparison.pdf)
 
 
 ## Other Classes
 ### Fraction
-This class is how we deal with numbers in row reduction. Because there will necessarily be some improper fraction, we don't want to use doubles
-as there will be some rounding error that messes up the final integer result. This class implements BigIntegers to be used as the numerator and 
-denominator. We then implement a few methods, including arithmetic functions, comparability methods, and some integer and double estimation methods. 
-This makes the result much easier than having to deal with weird double rounding errors.  
+This class manages numbers in row reduction. 
+It uses BigInteger to handle improper fractions, avoiding rounding errors common in doubles. 
+It includes arithmetic functions, comparability methods, and integer and double estimation methods.
 
 ### Driver
-This class allows a user to interact with all of the determinant-solving classes. We allow the user to either randomly generate a matrix, or allow the user to
-input their own matrix. They can then compute the determinant with any one of the three methods, and the runtime taken to compute the determinant is printed.  
-### Utility
-The utility simplifies a few common functions we need to perform. Including printing the matrix and arrays, converting a matrix to a different value,
- checking if a matrix is square, checking if two double values are close enough to reasonably conclude they computed the same number, a gcd and lcm calculator,
- a method to sleep for a certain amount of time, and finally some methods to randomly compute matrices.  
- 
-### Tester
-The tester class was used in concurrence with the development of every class and method to make sure that everything worked as expected.
+This class enables user interaction with determinant-solving classes. 
+Users can either generate a matrix randomly or input their own. 
+They can then compute the determinant with any of the three methods, and the runtime is printed.
+
 ### Runtime
 The runtime experiment class can be used on any device to check the average runtime of every method, used on every size of matrix. There are clear
 details in the main method to assist a user in using it. The method tests each different size and averages out the time to calculate a specific amount of 
 determinants.
+
+### Utility
+The utility simplifies common functions, including printing matrices and arrays, converting a matrix to a different value, checking if a matrix is square, checking if two double values are close enough, a gcd and lcm calculator, a method to sleep for a specified time, and methods to randomly compute matrices.
+ 
+### Tester
+The tester class was used in concurrence with the development of every class and method to make sure that everything worked as expected.
+
 
