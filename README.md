@@ -1,5 +1,5 @@
 # Determinant Calculator
-["In mathematics, the determinant is a scalar value that is a function of the entries of a square matrix."]{https://en.wikipedia.org/wiki/Determinant}
+["In mathematics, the determinant is a scalar value that is a function of the entries of a square matrix."](https://en.wikipedia.org/wiki/Determinant)
 The determinant of a matrix is a value that contains important information about the square matrix it is derived from. This
 project contains three different methods to find that value. Use the driver for easy access, or the runtime experiment to
 see the runtime efficiency of each method.
